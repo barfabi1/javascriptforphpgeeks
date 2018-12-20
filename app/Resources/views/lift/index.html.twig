@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-7">
+            <h2>
+                Lift History
+                <a href="#list-stuff-form" class="btn btn-md btn-success pull-right">
+                    <span class="fa fa-plus"></span> Add
+                </a>
+            </h2>
+
+            <table class="table table-striped js-rep-log-table">
+                <thead>
+                <tr>
+                    <th>What</th>
+                    <th>How many times?</th>
+                    <th>Weight</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for repLog in repLogs %}
+                    <tr data-weight="{{ repLog.totalWeightLifted }}">
+                        <td>{{ repLog.itemLabel|trans }}</td>
+                        <td>{{ repLog.reps }}</td>
+                        <td>{{ repLog.totalWeightLifted }}</td>
+                        <td>
+                            <a href="#"
+                               class="js-delete-rep-log"
+                               data-url="{{ path('rep_log_delete', {id: repLog.id}) }}"
+                            >
+                                <span class="fa fa-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">Get liftin'!</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>&nbsp;</td>
+                    <th>Total</th>
+                    <th class="js-total-weight">{{ totalWeight }}</th>
+                    <td>&nbsp;</td>
+                </tr>
+                </tfoot>
+            </table>
+
+            {{ include('lift/_form.html.twig') }}
+        </div>
+        <div class="col-md-5">
+            <div class="leaderboard">
+                <h2 class="text-center"><img class="dumbbell" src="{{ asset('assets/images/dumbbell.png') }}">Leaderboard</h2>
+
+                {{ include('lift/_leaderboard.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function() {
+            var $table = $('.js-rep-log-table');
+
+            $table.find('.js-delete-rep-log').on('click', function (e) {
+                e.preventDefault();
+
+                $(this).addClass('text-danger');
+                $(this).find('.fa')
+                    .removeClass('fa-trash')
+                    .addClass('fa-spinner')
+                    .addClass('fa-spin');
+
+                var deleteUrl = $(this).data('url');
+                var $row = $(this).closest('tr');
+                var $totalWeightContainer = $table.find('.js-total-weight');
+                var newWeight = $totalWeightContainer.html() - $row.data('weight');
+                $.ajax({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    success: function() {
+                        $row.fadeOut();
+                        $totalWeightContainer.html(newWeight);
+                    }
+                });
+            });
+
+            $table.find('tbody tr').on('click', function() {
+                console.log('row clicked!');
+            });
+        });
+    </script>
+{% endblock %}
+
