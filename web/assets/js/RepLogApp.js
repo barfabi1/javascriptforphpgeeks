@@ -10,7 +10,7 @@
     window.RepLogApp = {
         initialize: function($wrapper) {
             this.$wrapper = $wrapper;
-            Helper.initialize($wrapper);
+            this.helper = new Helper($wrapper);
 
             this.$wrapper.find('.js-delete-rep-log').on(
                 'click',
@@ -20,12 +20,24 @@
                 'click',
                 this.handleRowClick.bind(this)
             );
-
+            console.log(this.helper, Object.keys(this.helper)); //instancja helpera
+            console.log(Helper, Object.keys(Helper)); //sam obiekt(klasa) helper
+            //Nowe instancje obiektów nie mają metod
+            //funckja calculateTotalWeight praktycznie jest dalej statyczna - nie mozna jej wywolywac w nowych instancjach tego obiektu
+            //jak chcemy dodac metode do nowych instancji, w glowynm obiekcie musimy dodac slowo prototype
+            //Gdy towrzymy obiekt, z ktorego maja byc tworzone instancje, musimy jego propercje i metody dodac do klucza prototype
+            //Każdy obiekt posiada klucz __proto__
+            var playObject = {
+                lift: 'stuf'
+            };
+            playObject.__proto__.cat = 'meow';
+            console.log(playObject.lift, playObject.cat);
+            console.log([].__proto__);
         },
 
         updateTotalWeightLifted: function() {
             this.$wrapper.find('.js-total-weight').html(
-                Helper.calculateTotalWeight()
+                this.helper.calculateTotalWeight()
             );
         },
 
@@ -65,18 +77,21 @@
      * A "private" object
      */
     //jak zabiorę var to ten obiekt bedzie publiczny (ustawiony na window)
-    var Helper = {
-        initialize: function ($wrapper) {
-            this.$wrapper = $wrapper;
-        },
-        //nazwy metod, które mają byc prywatne, oznaczamy przez '_'
-        calculateTotalWeight: function () {
-            var totalWeight = 0;
-            this.$wrapper.find('tbody tr').each(function() {
-                totalWeight += $(this).data('weight');
-            });
-
-            return totalWeight;
-        }
+    var Helper = function ($wrapper) {
+        this.$wrapper = $wrapper;
     };
+
+    //nazwy metod, które mają byc prywatne, oznaczamy przez '_'
+    Helper.prototype.calculateTotalWeight = function () {
+        var totalWeight = 0;
+        this.$wrapper.find('tbody tr').each(function() {
+            totalWeight += $(this).data('weight');
+        });
+
+        return totalWeight;
+    }
+
 })(window, jQuery);
+//W JS wszystko jest obiektem
+
+//Aby robić instancje obiektow: 1. zamien obiekt na funkcje, ktora pelni role konstruktora. 2. wszysrkie propercje i metody dodaj do przez prototype i beda pod kluczem __proto__
