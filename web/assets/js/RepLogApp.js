@@ -1,9 +1,11 @@
 //Zamiast dodawać even listenery do nowo powstałych elementów, dodaj je do tych które już istnieją
-(function(window, $) {
+(function(window, $, Routing) {
     'use strict';
     window.RepLogApp = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.helper = new Helper(this.$wrapper);
+
+        this.loadRepLogs();
 
         //To jest delegate selector. Przypisz event handler do obiektu ktory istenieje, zas jako 2 argument wskaz element do ktorego ma byc przypisany
         //Konkretnie chodzi tutja o event bubbling - od wrappera, d- js-delete-rep-log
@@ -27,6 +29,19 @@
     $.extend(window.RepLogApp.prototype, {
         _selectors: {
             newRepForm: '.js-new-rep-log-form'
+        },
+
+        loadRepLogs: function() {
+
+            var self = this;
+            $.ajax({
+                url: Routing.generate('rep_log_list'),
+                success: function (data) {
+                    $.each(data.items, function (key, repLog) {
+                        self._addRow(repLog);
+                    })
+                }
+            });
         },
 
         updateTotalWeightLifted: function () {
@@ -154,4 +169,4 @@
         }
     });
 
-})(window, jQuery);
+})(window, jQuery, Routing);
