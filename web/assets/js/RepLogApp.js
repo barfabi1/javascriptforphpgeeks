@@ -79,8 +79,8 @@
                 method: 'POST',
                 data: JSON.stringify(formData),
                 success: function (data) {
-                    //todo
-                    console.log('success');
+                    self._clearForm();
+                    self._addRow(data);
                 },
                 error: function (jqXHR) {
                     var errorData = JSON.parse(jqXHR.responseText);
@@ -93,8 +93,9 @@
         _mapErrorsToForm: function (errorData) {
             //reset things
             var $form = this.$wrapper.find(this._selectors.newRepForm);
-            $form.find('.js-field-error').remove();
-            $form.find('.form-group').removeClass('has-error');
+            //$form.find('.js-field-error').remove();
+            //$form.find('.form-group').removeClass('has-error');
+            this._removeFormErrors();
 
 
             $form.find(':input').each(function () {
@@ -110,6 +111,29 @@
                 $wrapper.append($error);
                 $wrapper.addClass('has-error');
             })
+        },
+
+        _removeFormErrors: function () {
+            var $form = this.$wrapper.find(this._selectors.newRepForm);
+            $form.find('.js-field-error').remove();
+            $form.find('.form-group').removeClass('has-error');
+        },
+
+        _clearForm: function () {
+            this._removeFormErrors();
+
+            var $form = this.$wrapper.find(this._selectors.newRepForm);
+            $form[0].reset();
+        },
+
+        _addRow: function (repLog) {
+            var tplText = $('#js-rep-log-row-template').html();
+            var tpl = _.template(tplText);
+
+            var html = tpl(repLog);
+            this.$wrapper.find('tbody')
+                .append($.parseHTML(html));
+            this.updateTotalWeightLifted();
         }
     });
 
