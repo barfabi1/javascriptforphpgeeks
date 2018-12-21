@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="54435241-1ef5-48f1-b2d8-dba586d8a454" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/Resources/views/lift/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/views/lift/index.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/assets/js/RepLogApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/assets/js/RepLogApp.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,8 +28,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Resources/views/lift/index.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="754">
+              <caret line="65" column="18" lean-forward="true" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
               <folding>
                 <element signature="e#580#586#1#HTML" expanded="true" />
                 <element signature="e#1612#1618#1#HTML" expanded="true" />
@@ -41,11 +42,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web/assets/js/RepLogApp.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="514">
-              <caret line="96" column="177" selection-start-line="96" selection-start-column="177" selection-end-line="96" selection-end-column="177" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
+            <state relative-caret-position="559">
+              <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
             </state>
           </provider>
         </entry>
@@ -210,7 +208,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13951000" />
+    <option name="totallyTimeSpent" value="14264000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3839" y="-11" width="1922" height="1092" extended-state="6" />
@@ -267,8 +265,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Resources/views/lift/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        <state relative-caret-position="754">
+          <caret line="65" column="18" lean-forward="true" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
           <folding>
             <element signature="e#580#586#1#HTML" expanded="true" />
             <element signature="e#1612#1618#1#HTML" expanded="true" />
@@ -279,11 +277,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/assets/js/RepLogApp.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="96" column="177" selection-start-line="96" selection-start-column="177" selection-end-line="96" selection-end-column="177" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state relative-caret-position="559">
+          <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
         </state>
       </provider>
     </entry>
