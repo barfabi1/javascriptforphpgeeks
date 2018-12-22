@@ -102,6 +102,14 @@
                     self._mapErrorsToForm(errorData.errors);
 
                 }
+            }).then(function(data) {
+              console.log('I\'am successful');
+              console.log(data);
+
+              return data;
+            }).then(function(data) {
+              console.log('Another message');
+              console.log(data);
             });
         },
 
