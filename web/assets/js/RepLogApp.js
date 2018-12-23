@@ -55,11 +55,13 @@
             swal({
                 title: 'Delete this log?',
                 text: 'What? Did you not actually lift this?',
-                showCancelButton: true
-            }).then(function () {
-                self._deleteRepLog($link);
+                showCancelButton: true,
+                showLoaderOnConfirm: true,
+                preConfirm: function() {
+                    return self._deleteRepLog($link);
+                }
             }).catch(function(arg) {
-                console.log('canceled', arg);
+                // canceling is cool!
             });
         },
 
@@ -73,7 +75,8 @@
             var deleteUrl = $link.data('url');
             var $row = $link.closest('tr');
             var self = this;
-            $.ajax({
+
+            return $.ajax({
                 url: deleteUrl,
                 method: 'DELETE'
             }).then(function() {
