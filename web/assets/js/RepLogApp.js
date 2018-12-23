@@ -1,14 +1,12 @@
-//Zamiast dodawać even listenery do nowo powstałych elementów, dodaj je do tych które już istnieją
+'use strict';
+
 (function(window, $, Routing) {
-    'use strict';
     window.RepLogApp = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.helper = new Helper(this.$wrapper);
 
         this.loadRepLogs();
 
-        //To jest delegate selector. Przypisz event handler do obiektu ktory istenieje, zas jako 2 argument wskaz element do ktorego ma byc przypisany
-        //Konkretnie chodzi tutja o event bubbling - od wrappera, d- js-delete-rep-log
         this.$wrapper.on(
             'click',
             '.js-delete-rep-log',
@@ -32,7 +30,6 @@
         },
 
         loadRepLogs: function() {
-
             var self = this;
             $.ajax({
                 url: Routing.generate('rep_log_list'),
@@ -78,16 +75,15 @@
             console.log('row clicked!');
         },
 
-        handleNewFormSubmit: function (e) {
+        handleNewFormSubmit: function(e) {
             e.preventDefault();
 
             var $form = $(e.currentTarget);
             var formData = {};
             $.each($form.serializeArray(), function(key, fieldData) {
-                formData[fieldData.name] = fieldData.value;
+                formData[fieldData.name] = fieldData.value
             });
             var self = this;
-
             this._saveRepLog(formData)
             .then(function(data) {
                 self._clearForm();
@@ -99,26 +95,33 @@
         },
 
         _saveRepLog: function(data) {
-            return $.ajax({
-              url: Routing.generate('rep_log_new'),
-              method: 'POST',
-              data: JSON.stringify(data)
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: Routing.generate('rep_log_new'),
+                    method: 'POST',
+                    data: JSON.stringify(data)
+                }).then(function(data, textStatus, jqXHR) {
+                    $.ajax({
+                        url: jqXHR.getResponseHeader('Location')
+                    }).then(function(data) {
+                        // we're finally done!
+                        resolve(data);
+                    });
+                }).catch(function(jqXHR) {
+                    reject(jqXHR);
+                });
             });
         },
 
-        _mapErrorsToForm: function (errorData) {
-            //reset things
-            var $form = this.$wrapper.find(this._selectors.newRepForm);
-            //$form.find('.js-field-error').remove();
-            //$form.find('.form-group').removeClass('has-error');
+        _mapErrorsToForm: function(errorData) {
             this._removeFormErrors();
+            var $form = this.$wrapper.find(this._selectors.newRepForm);
 
-
-            $form.find(':input').each(function () {
+            $form.find(':input').each(function() {
                 var fieldName = $(this).attr('name');
                 var $wrapper = $(this).closest('.form-group');
                 if (!errorData[fieldName]) {
-                    //no error!
+                    // no error!
                     return;
                 }
 
@@ -126,29 +129,29 @@
                 $error.html(errorData[fieldName]);
                 $wrapper.append($error);
                 $wrapper.addClass('has-error');
-            })
+            });
         },
 
-        _removeFormErrors: function () {
+        _removeFormErrors: function() {
             var $form = this.$wrapper.find(this._selectors.newRepForm);
             $form.find('.js-field-error').remove();
             $form.find('.form-group').removeClass('has-error');
         },
 
-        _clearForm: function () {
+        _clearForm: function() {
             this._removeFormErrors();
 
             var $form = this.$wrapper.find(this._selectors.newRepForm);
             $form[0].reset();
         },
 
-        _addRow: function (repLog) {
+        _addRow: function(repLog) {
             var tplText = $('#js-rep-log-row-template').html();
             var tpl = _.template(tplText);
 
             var html = tpl(repLog);
-            this.$wrapper.find('tbody')
-                .append($.parseHTML(html));
+            this.$wrapper.find('tbody').append($.parseHTML(html));
+
             this.updateTotalWeightLifted();
         }
     });
