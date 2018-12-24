@@ -1,37 +1,37 @@
 'use strict';
 
 (function(window, $, Routing, swal) {
-
     class RepLogApp {
-    constructor($wrapper) {
-          this.$wrapper = $wrapper;
-          this.helper = new Helper(this.$wrapper);
+        constructor($wrapper) {
+            this.$wrapper = $wrapper;
+            this.helper = new Helper(this.$wrapper);
 
-          this.loadRepLogs();
+            this.loadRepLogs();
 
-          this.$wrapper.on(
-              'click',
-              '.js-delete-rep-log',
-              this.handleRepLogDelete.bind(this)
-          );
-          this.$wrapper.on(
-              'click',
-              'tbody tr',
-              this.handleRowClick.bind(this)
-          );
-          this.$wrapper.on(
-              'submit',
-              this._selectors.newRepForm,
-              this.handleNewFormSubmit.bind(this)
-          );
+            this.$wrapper.on(
+                'click',
+                '.js-delete-rep-log',
+                this.handleRepLogDelete.bind(this)
+            );
+            this.$wrapper.on(
+                'click',
+                'tbody tr',
+                this.handleRowClick.bind(this)
+            );
+            this.$wrapper.on(
+                'submit',
+                RepLogApp._selectors.newRepForm,
+                this.handleNewFormSubmit.bind(this)
+            );
         }
 
-        //ES6 słowo kluczowe get do propercji
-        //jest jeszcze słowo set
-        get _selectors() {
+        /**
+         * Call like this.selectors
+         */
+        static get _selectors() {
             return {
-              newRepForm: '.js-new-rep-log-form'
-            };
+                newRepForm: '.js-new-rep-log-form'
+            }
         }
 
         loadRepLogs() {
@@ -134,7 +134,7 @@
 
         _mapErrorsToForm(errorData) {
             this._removeFormErrors();
-            const $form = this.$wrapper.find(this._selectors.newRepForm);
+            const $form = this.$wrapper.find(RepLogApp._selectors.newRepForm);
 
             $form.find(':input').each((index, element) => {
                 const fieldName = $(element).attr('name');
@@ -152,7 +152,7 @@
         }
 
         _removeFormErrors() {
-            const $form = this.$wrapper.find(this._selectors.newRepForm);
+            const $form = this.$wrapper.find(RepLogApp._selectors.newRepForm);
             $form.find('.js-field-error').remove();
             $form.find('.form-group').removeClass('has-error');
         }
@@ -160,7 +160,7 @@
         _clearForm() {
             this._removeFormErrors();
 
-            const $form = this.$wrapper.find(this._selectors.newRepForm);
+            const $form = this.$wrapper.find(RepLogApp._selectors.newRepForm);
             $form[0].reset();
         }
 
@@ -175,23 +175,18 @@
         }
     }
 
-
     /**
      * A "private" object
      */
-     //Prawdziwa klasa w ES6 to tak naprawdę wrapper wokół prottypów i extendów
-     class Helper {
-       constructor($wrapper) {
-           this.$wrapper = $wrapper;
-       }
+    class Helper {
+        constructor($wrapper) {
+            this.$wrapper = $wrapper;
+        }
 
         calculateTotalWeight() {
-            let totalWeight = 0;
-            this.$wrapper.find('tbody tr').each((index, element) => {
-                totalWeight += $(element).data('weight');
-            });
-
-            return totalWeight;
+            return Helper._calculateWeights(
+                this.$wrapper.find('tbody tr')
+            );
         }
 
         getTotalWeightString(maxWeight = 500) {
@@ -202,6 +197,15 @@
             }
 
             return weight + ' lbs';
+        }
+
+        static _calculateWeights($elements) {
+            let totalWeight = 0;
+            $elements.each((index, element) => {
+                totalWeight += $(element).data('weight');
+            });
+
+            return totalWeight;
         }
     }
 
