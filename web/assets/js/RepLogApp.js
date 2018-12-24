@@ -29,7 +29,7 @@
             newRepForm: '.js-new-rep-log-form'
         },
 
-        loadRepLogs: function() {
+        loadRepLogs() {
             $.ajax({
                 url: Routing.generate('rep_log_list'),
             }).then(data => {
@@ -39,13 +39,13 @@
             })
         },
 
-        updateTotalWeightLifted: function () {
+        updateTotalWeightLifted() {
             this.$wrapper.find('.js-total-weight').html(
-                this.helper.calculateTotalWeight()
+                this.helper.getTotalWeightString()
             );
         },
 
-        handleRepLogDelete: function (e) {
+        handleRepLogDelete(e) {
             e.preventDefault();
 
             const $link = $(e.currentTarget);
@@ -55,14 +55,13 @@
                 text: 'What? Did you not actually lift this?',
                 showCancelButton: true,
                 showLoaderOnConfirm: true,
-                //Jeśli funkcja tylko zwraca wartość, nie trzeba robić klamerek w funkcji strzałkowej
                 preConfirm: () => this._deleteRepLog($link)
             }).catch((arg) => {
                 // canceling is cool!
             });
         },
 
-        _deleteRepLog: function($link) {
+        _deleteRepLog($link) {
             $link.addClass('text-danger');
             $link.find('.fa')
                 .removeClass('fa-trash')
@@ -83,11 +82,11 @@
             })
         },
 
-        handleRowClick: function () {
+        handleRowClick() {
             console.log('row clicked!');
         },
 
-        handleNewFormSubmit: function(e) {
+        handleNewFormSubmit(e) {
             e.preventDefault();
 
             const $form = $(e.currentTarget);
@@ -105,10 +104,12 @@
             });
         },
 
-        _saveRepLog: function(data) {
+        _saveRepLog(data) {
             return new Promise((resolve, reject) => {
+                const url = Routing.generate('rep_log_new');
+
                 $.ajax({
-                    url: Routing.generate('rep_log_new'),
+                    url,
                     method: 'POST',
                     data: JSON.stringify(data)
                 }).then((data, textStatus, jqXHR) => {
@@ -120,12 +121,13 @@
                     });
                 }).catch((jqXHR) => {
                     const errorData = JSON.parse(jqXHR.responseText);
+
                     reject(errorData);
                 });
             });
         },
 
-        _mapErrorsToForm: function(errorData) {
+        _mapErrorsToForm(errorData) {
             this._removeFormErrors();
             const $form = this.$wrapper.find(this._selectors.newRepForm);
 
@@ -144,20 +146,20 @@
             });
         },
 
-        _removeFormErrors: function() {
+        _removeFormErrors() {
             const $form = this.$wrapper.find(this._selectors.newRepForm);
             $form.find('.js-field-error').remove();
             $form.find('.form-group').removeClass('has-error');
         },
 
-        _clearForm: function() {
+        _clearForm() {
             this._removeFormErrors();
 
             const $form = this.$wrapper.find(this._selectors.newRepForm);
             $form[0].reset();
         },
 
-        _addRow: function(repLog) {
+        _addRow(repLog) {
             const tplText = $('#js-rep-log-row-template').html();
             const tpl = _.template(tplText);
 
@@ -175,13 +177,23 @@
         this.$wrapper = $wrapper;
     };
     $.extend(Helper.prototype, {
-        calculateTotalWeight: function() {
+        calculateTotalWeight() {
             let totalWeight = 0;
             this.$wrapper.find('tbody tr').each((index, element) => {
                 totalWeight += $(element).data('weight');
             });
 
             return totalWeight;
+        },
+
+        getTotalWeightString(maxWeight = 500) {
+            let weight = this.calculateTotalWeight();
+
+            if (weight > maxWeight) {
+                weight = maxWeight + '+';
+            }
+
+            return weight + ' lbs';
         }
     });
 })(window, jQuery, Routing, swal);
