@@ -1,26 +1,27 @@
-// var - zasięg jest funkcją, w której się znajduje i każda zagnieżdżona funkcja
-// let - jest "block scoped", czyli każde otwarcie klamerek to zasięg dla leta poza nim
+class AGreatClass {
+  constructor(greatNumber) {
+    this.greatNumber = greatNumber;
+  }
 
-//const i let są takie same, orpócz tego, że const nie można ponownie deklarować
-//w const można zmieniać propercje, ale nie samego consta
-//w ES6 można używać: var, const i let
-const aGreatNumber = 10;
-const aGreatObject = {withGreatKeys: true };
-
-aGreatObject.withGreatKeys = false;
-if(true) {
-      //aGreatNumber = 42;
+  returnGreatThings() {
+    return this.greatNumber;
+  }
 }
 
-setTimeout(() => {
-  console.log(aGreatNumber);
-  console.log(aGreatObject)
-}, 1000);
+//W klasach ES6 można nadpisywać metody klas rodziców
+//odpowiednik PHP parent:returnGreatThings() w JS to super
+class AnotherGreatClass extends AGreatClass {
 
-console.log('Waiting....');
+  //jeśli klasa potomna ma nadpisywać konstruktor, to musi przyjmować wszystkie argumenty swoijego rodzica
+  constructor(greatNumber, greatWord) {
+    super(greatNumber); //Funkcja super (nie słowo super) wywołuje konsturktor klasy rodzica
+    this.greatWord = greatWord;
+  }
+  returnGreatThings() {
+    let greatNumber = super.returnGreatThings();
+    return [greatNumber, this.greatWord];
+  }
+}
 
-//Variable hoisting - jeśli zmienna jest wyżej od swojej deklaracji, to zostanie jej przypisana wartość undefined
-//czyli jak kod znajdzie jakąś zmienną, to nad nią przypisuje var nazwa_zwmiennej - bez wartości, aż na początek zasięgu
-
-//var są hoistowane, let NIE SĄ HOISTOWANE - wprowadza porządek
-//let nie jest hoistowany dzięki tzw. The Temporal Dead Zone
+const aGreatObject = new AnotherGreatClass(43, 'adventure');
+console.log(aGreatObject.returnGreatThings());
