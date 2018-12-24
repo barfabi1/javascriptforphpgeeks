@@ -1,15 +1,20 @@
-console.log(aGreatNumber);
 // var - zasięg jest funkcją, w której się znajduje i każda zagnieżdżona funkcja
 // let - jest "block scoped", czyli każde otwarcie klamerek to zasięg dla leta poza nim
 
-let aGreatNumber = 10;
+//const i let są takie same, orpócz tego, że const nie można ponownie deklarować
+//w const można zmieniać propercje, ale nie samego consta
+//w ES6 można używać: var, const i let
+const aGreatNumber = 10;
+const aGreatObject = {withGreatKeys: true };
 
+aGreatObject.withGreatKeys = false;
 if(true) {
-      aGreatNumber = 42;
+      //aGreatNumber = 42;
 }
 
 setTimeout(() => {
   console.log(aGreatNumber);
+  console.log(aGreatObject)
 }, 1000);
 
 console.log('Waiting....');
