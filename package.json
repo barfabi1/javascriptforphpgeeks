@@ -6,6 +6,8 @@
   "author": "Bartosz Fabiański <bartosz.fabianski@outlook.com>",
   "license": "MIT",
   "devDependencies": {
+    "jquery": "^3.3.1",
+    "sweetalert2": "6.1.0",
     "webpack": "3"
   }
 }
