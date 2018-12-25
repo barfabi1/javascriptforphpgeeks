@@ -1,16 +1,15 @@
-//foreach dziala tylko na tablicach i nie ma each. dlatego anjczesciej uzywa sie jQuery z each
-//Dla loopowania koelkcji elementów najlepsza jet for of (daje value)
-//Dla loopowania tablic asocjacyjnych i obiektów najlepsza jest for in (daje value i key)
 'use strict';
 
 (function(window, $, Routing, swal) {
-    //HelperInstance już nie będzie dostępne poza samowywołującą się funkcją
+
     let HelperInstances = new WeakMap();
 
     class RepLogApp {
         constructor($wrapper) {
             this.$wrapper = $wrapper;
-            HelperInstances.set(this, new Helper(this.$wrapper)); //this użyty jako klucz w mapie
+            this.repLogs = [];
+
+            HelperInstances.set(this, new Helper(this.repLogs));
 
             this.loadRepLogs();
 
@@ -44,13 +43,9 @@
             $.ajax({
                 url: Routing.generate('rep_log_list'),
             }).then(data => {
-                //Pętla "for of"
                 for (let repLog of data.items) {
-                  this._addRow(repLog);
+                    this._addRow(repLog);
                 }
-                //$.each(data.items, (key, repLog) => {
-                //    this._addRow(repLog);
-                //});
             })
         }
 
@@ -91,7 +86,15 @@
                 method: 'DELETE'
             }).then(() => {
                 $row.fadeOut('normal', () => {
+                    // we need to remove the repLog from this.repLogs
+                    // the "key" is the index to this repLog on this.repLogs
+                    this.repLogs.splice(
+                        $row.data('key'),
+                        1
+                    );
+
                     $row.remove();
+
                     this.updateTotalWeightLifted();
                 });
             })
@@ -107,13 +110,9 @@
             const $form = $(e.currentTarget);
             const formData = {};
 
-            //Ta pętla sama dodaje key i value
             for (let fieldData of $form.serializeArray()) {
-              formData[fieldData.name] = fieldData.value;
+                formData[fieldData.name] = fieldData.value
             }
-            //$.each($form.serializeArray(), (key, fieldData) => {
-            //    formData[fieldData.name] = fieldData.value
-            //});
 
             this._saveRepLog(formData)
             .then((data) => {
@@ -151,7 +150,6 @@
             this._removeFormErrors();
             const $form = this.$wrapper.find(RepLogApp._selectors.newRepForm);
 
-            //$form.find(':input').each((index, element) => {
             for (let element of $form.find(':input')) {
                 const fieldName = $(element).attr('name');
                 const $wrapper = $(element).closest('.form-group');
@@ -181,12 +179,16 @@
         }
 
         _addRow(repLog) {
+            this.repLogs.push(repLog);
             // destructuring example
             // let {id, itemLabel, reps, totallyMadeUpKey = 'whatever!'} = repLog;
             // console.log(id, itemLabel, reps, totallyMadeUpKey);
 
             const html = rowTemplate(repLog);
-            this.$wrapper.find('tbody').append($.parseHTML(html));
+            const $row = $($.parseHTML(html));
+            // store the repLogs index
+            $row.data('key', this.repLogs.length - 1);
+            this.$wrapper.find('tbody').append($row);
 
             this.updateTotalWeightLifted();
         }
@@ -196,13 +198,13 @@
      * A "private" object
      */
     class Helper {
-        constructor($wrapper) {
-            this.$wrapper = $wrapper;
+        constructor(repLogs) {
+            this.repLogs = repLogs;
         }
 
         calculateTotalWeight() {
             return Helper._calculateWeights(
-                this.$wrapper.find('tbody tr')
+                this.repLogs
             );
         }
 
@@ -216,11 +218,10 @@
             return weight + ' lbs';
         }
 
-        static _calculateWeights($elements) {
+        static _calculateWeights(repLogs) {
             let totalWeight = 0;
-            for (let element of $elements) {
-            //$elements.each((index, element) => {
-                totalWeight += $(element).data('weight');
+            for (let repLog of repLogs) {
+                totalWeight += repLog.totalWeightLifted;
             }
 
             return totalWeight;
