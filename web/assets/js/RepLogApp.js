@@ -1,3 +1,6 @@
+//foreach dziala tylko na tablicach i nie ma each. dlatego anjczesciej uzywa sie jQuery z each
+//Dla loopowania koelkcji elementów najlepsza jet for of (daje value)
+//Dla loopowania tablic asocjacyjnych i obiektów najlepsza jest for in (daje value i key)
 'use strict';
 
 (function(window, $, Routing, swal) {
@@ -39,9 +42,13 @@
             $.ajax({
                 url: Routing.generate('rep_log_list'),
             }).then(data => {
-                $.each(data.items, (key, repLog) => {
-                    this._addRow(repLog);
-                });
+                //Pętla "for of"
+                for (let repLog of data.items) {
+                  this._addRow(repLog);
+                }
+                //$.each(data.items, (key, repLog) => {
+                //    this._addRow(repLog);
+                //});
             })
         }
 
@@ -97,9 +104,14 @@
 
             const $form = $(e.currentTarget);
             const formData = {};
-            $.each($form.serializeArray(), (key, fieldData) => {
-                formData[fieldData.name] = fieldData.value
-            });
+
+            //Ta pętla sama dodaje key i value
+            for (let fieldData of $form.serializeArray()) {
+              formData[fieldData.name] = fieldData.value;
+            }
+            //$.each($form.serializeArray(), (key, fieldData) => {
+            //    formData[fieldData.name] = fieldData.value
+            //});
 
             this._saveRepLog(formData)
             .then((data) => {
@@ -137,7 +149,8 @@
             this._removeFormErrors();
             const $form = this.$wrapper.find(RepLogApp._selectors.newRepForm);
 
-            $form.find(':input').each((index, element) => {
+            //$form.find(':input').each((index, element) => {
+            for (let element of $form.find(':input')) {
                 const fieldName = $(element).attr('name');
                 const $wrapper = $(element).closest('.form-group');
                 if (!errorData[fieldName]) {
@@ -149,7 +162,7 @@
                 $error.html(errorData[fieldName]);
                 $wrapper.append($error);
                 $wrapper.addClass('has-error');
-            });
+            }
         }
 
         _removeFormErrors() {
@@ -203,9 +216,10 @@
 
         static _calculateWeights($elements) {
             let totalWeight = 0;
-            $elements.each((index, element) => {
+            for (let element of $elements) {
+            //$elements.each((index, element) => {
                 totalWeight += $(element).data('weight');
-            });
+            }
 
             return totalWeight;
         }
