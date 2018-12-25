@@ -1,5 +1,4 @@
-let foods = new Set();
-foods.add('gelato');
-foods.add('tortas');
-foods.add('gelato');
+// znak ./ jest ważny bo mówi, żeby szukać relatywnie pliku
+const foods = require('./foods');
+
 console.log(foods);
