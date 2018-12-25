@@ -4,11 +4,13 @@
 'use strict';
 
 (function(window, $, Routing, swal) {
+    //HelperInstance już nie będzie dostępne poza samowywołującą się funkcją
+    let HelperInstances = new WeakMap();
 
     class RepLogApp {
         constructor($wrapper) {
             this.$wrapper = $wrapper;
-            this.helper = new Helper(this.$wrapper);
+            HelperInstances.set(this, new Helper(this.$wrapper)); //this użyty jako klucz w mapie
 
             this.loadRepLogs();
 
@@ -54,7 +56,7 @@
 
         updateTotalWeightLifted() {
             this.$wrapper.find('.js-total-weight').html(
-                this.helper.getTotalWeightString()
+                HelperInstances.get(this).getTotalWeightString()
             );
         }
 
