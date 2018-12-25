@@ -1,6 +1,7 @@
 'use strict';
 
 (function(window, $, Routing, swal) {
+
     class RepLogApp {
         constructor($wrapper) {
             this.$wrapper = $wrapper;
@@ -165,23 +166,11 @@
         }
 
         _addRow(repLog) {
-          console.log(repLog);
-          //destructuring
-          //pozwala na tworzenie nowych zmiennych z propercji obiektu
-          //nie tworzy zmiennych z nieistniejących kluczy - undefined, ale można im dać defaultową wartość
-          let {id, itemLabel, reps, totallyMadeUpKey = 'whatever'} = repLog;
-          console.log(id, itemLabel, reps);
-          //W PRZYPADKU TABLIC, zmienne tworzone są według pozycji elementu w tablicy
-          const item = ['gelato', 'shoe', 'pizza'];
-          const [food1, food2] = items;
-          console.log(food1); //gelato
-          console.log(food2); //pizza
+            // destructuring example
+            // let {id, itemLabel, reps, totallyMadeUpKey = 'whatever!'} = repLog;
+            // console.log(id, itemLabel, reps, totallyMadeUpKey);
 
-
-            const tplText = $('#js-rep-log-row-template').html();
-            const tpl = _.template(tplText);
-
-            const html = tpl(repLog);
+            const html = rowTemplate(repLog);
             this.$wrapper.find('tbody').append($.parseHTML(html));
 
             this.updateTotalWeightLifted();
@@ -221,6 +210,22 @@
             return totalWeight;
         }
     }
+
+    const rowTemplate = (repLog) => `
+<tr data-weight="${repLog.totalWeightLifted}">
+    <td>${repLog.itemLabel}</td>
+    <td>${repLog.reps}</td>
+    <td>${repLog.totalWeightLifted}</td>
+    <td>
+        <a href="#"
+           class="js-delete-rep-log"
+           data-url="${repLog.links._self}"
+        >
+            <span class="fa fa-trash"></span>
+        </a>
+    </td>
+</tr>
+`;
 
     window.RepLogApp = RepLogApp;
 })(window, jQuery, Routing, swal);
