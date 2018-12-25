@@ -1,27 +1,27 @@
-class AGreatClass {
-  constructor(greatNumber) {
-    this.greatNumber = greatNumber;
-  }
-
-  returnGreatThings() {
-    return this.greatNumber;
-  }
+//The spread operator
+let printThreeThings = function(thing1, thing2, thing3) {
+  console.log(thing1, thing2, thing3);
 }
 
-//W klasach ES6 można nadpisywać metody klas rodziców
-//odpowiednik PHP parent:returnGreatThings() w JS to super
-class AnotherGreatClass extends AGreatClass {
+let yummyThings = ['pizza', 'gelato', 'sushi', 'cheesburger'];
 
-  //jeśli klasa potomna ma nadpisywać konstruktor, to musi przyjmować wszystkie argumenty swoijego rodzica
-  constructor(greatNumber, greatWord) {
-    super(greatNumber); //Funkcja super (nie słowo super) wywołuje konsturktor klasy rodzica
-    this.greatWord = greatWord;
-  }
-  returnGreatThings() {
-    let greatNumber = super.returnGreatThings();
-    return [greatNumber, this.greatWord];
-  }
-}
+//można użyć ... amiast pisać yummyThings[0], yummyThings[1], yummyThings[2],
+//funkcja ignoruje jesli jest za duzo argumentów
+printThreeThings(...yummyThings);
 
-const aGreatObject = new AnotherGreatClass(43, 'adventure');
-console.log(aGreatObject.returnGreatThings());
+//Use-casy:
+//1. Reactjs
+//2. Mergowanie tablic
+
+let greatThings = ['swimming', 'sunsets', ...yummyThings, 'New Orleans'];
+
+let copyOfGreatThings = greatThings;
+//Tu jest trochę zwalone, bo jak się doda do skopiowanej tablicy przez ... to też pushuje się do orginalnej (jakaś forma referencji)
+//Dlatego, że tablice w JS to obiekty, a prez ich skopiowanie mają tę samą referencję
+copyOfGreatThings.push('summer');
+
+console.log(greatThings);
+console.log(copyOfGreatThings);
+
+//Robienie prawdziwej kopii ze spread operatorem
+let copyOfGreatThings = [...greatThings]; //Storzenie KOPII tablicy, a nie tej samej referencji
