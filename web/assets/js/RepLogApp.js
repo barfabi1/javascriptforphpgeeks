@@ -165,6 +165,19 @@
         }
 
         _addRow(repLog) {
+          console.log(repLog);
+          //destructuring
+          //pozwala na tworzenie nowych zmiennych z propercji obiektu
+          //nie tworzy zmiennych z nieistniejących kluczy - undefined, ale można im dać defaultową wartość
+          let {id, itemLabel, reps, totallyMadeUpKey = 'whatever'} = repLog;
+          console.log(id, itemLabel, reps);
+          //W PRZYPADKU TABLIC, zmienne tworzone są według pozycji elementu w tablicy
+          const item = ['gelato', 'shoe', 'pizza'];
+          const [food1, food2] = items;
+          console.log(food1); //gelato
+          console.log(food2); //pizza
+
+
             const tplText = $('#js-rep-log-row-template').html();
             const tpl = _.template(tplText);
 
