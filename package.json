@@ -1,0 +1,11 @@
+{
+  "name": "javascriptforphpgeeks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/barfabi1/javascriptforphpgeeks.git",
+  "author": "Bartosz Fabiański <bartosz.fabianski@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  }
+}
