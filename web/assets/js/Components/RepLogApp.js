@@ -4,7 +4,8 @@ const Helper = require('./RepLogAppHelper');
 const $ = require('jquery');
 const swal = require('sweetalert2');
 
-(function(window, Routing) {
+//W systemie modułowym, każdy moduł jest odpoiednio wyizolowany. nie potrzeba robić self-executing functions
+//Webpack sam owija w samo wywołujące się funkcje nasze moduły
 
     let HelperInstances = new WeakMap();
 
@@ -214,5 +215,8 @@ const swal = require('sweetalert2');
 </tr>
 `;
 
-    window.RepLogApp = RepLogApp;
-})(window, Routing);
+//Tuta dalej potrzebujemy tego obiektu globalnie
+//Ale już nie musimy polegac na globalnych zmiennych bo teraz można to zrobić lepiej
+//lepiej takie moduły eksportować
+//window.RepLogApp = RepLogApp;
+module.exports = RepLogApp;
